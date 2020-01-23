@@ -259,7 +259,7 @@ export default class Router {
 			const posts = await UsersController.getUsersByUserId(req.params.userId)
 			res.json(posts)
 		})
-		this.app.post('/userId', async (req,res)=>{
+		this.app.post('/users', async (req,res)=>{
 			const posts = await UsersController.createUser(req.body)
 			res.json(posts)
 		})
@@ -284,8 +284,8 @@ export default class Router {
 			res.json(posts)
 		})
 		this.app.post('/comments', async (req,res)=>{
-			const posts = await CommentsController.createComment(req.body)
-			res.json(posts)
+			const comments = await CommentsController.createComment(req.body)
+			res.json(comments)
 		})
 		this.app.put('/comments/:commentId', async (req,res)=>{
 			const posts = await CommentsController.updateComment(req.body,req.params.commentId)
@@ -296,10 +296,21 @@ export default class Router {
 			res.json(posts)
 		})
 
+		this.app.get('/comments/:id/comments', async (req,res)=>{
+			const {offset = 0, limit = 15} = req.query;
+			const posts = await CommentsController.getComments(Number(offset), Number(limit))
+			res.json(posts)
+		})
 
+		this.app.post('/comments/:id/comments', async (req,res)=>{
+			const posts = await CommentsController.createReply(req.body,req.params.id)
+			res.json(posts)
+		})
 
-
-
+		this.app.delete('/comments/:id/comments', async (req,res)=>{
+			const posts = await CommentsController.deleteComment(req.params.commentId)
+			res.json(posts)
+		})
 		// this.app.get('/posts/:id', async (req,res)=>{
 		// 	const {offset = 0, limit = 15} = req.query;
 		// 	console.log(limit)

@@ -10,18 +10,24 @@ class CommentController {
         const comments = await Comment.findAll({ where:{id:comment_id}})
         return comments;
     }
-    async createComment(obj){
-        const Comment = await Comment.create(obj)
-        return Comment;
+    async createComment(object){
+        console.log(object)
+        const comment = await Comment.create(object)
+        return comment;
     }
     async updateComment(obj,comment_id){
-        const Comment = await Comment.update(obj,{ where:{id:comment_id} })
-        return Comment;
+        const comment = await Comment.update(obj,{ where:{id:comment_id} })
+        return comment;
     }
     async deleteComment(comment_id){
-        const Comment = await Comment.destroy({ where:{id:comment_id} })
+        const comment = await Comment.destroy({ where:{id:comment_id} })
         
-        return Comment;
+        return comment;
+    }
+    async createReply(obj,parent_id){
+        console.log(obj)
+        const comment = await Comment.create({text:obj.text,post_id:obj.post_id,user_id:obj.user_id,parent_id:parent_id})
+        return comment;
     }
   
 
