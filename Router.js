@@ -298,7 +298,7 @@ export default class Router {
 
 		this.app.get('/comments/:id/comments', async (req,res)=>{
 			const {offset = 0, limit = 15} = req.query;
-			const posts = await CommentsController.getComments(Number(offset), Number(limit))
+			const posts = await CommentsController.getReply(Number(offset), Number(limit),req.params.id)
 			res.json(posts)
 		})
 
@@ -307,8 +307,8 @@ export default class Router {
 			res.json(posts)
 		})
 
-		this.app.delete('/comments/:id/comments', async (req,res)=>{
-			const posts = await CommentsController.deleteComment(req.params.commentId)
+		this.app.delete('/comments/:id/comments/:commentId', async (req,res)=>{
+			const posts = await CommentsController.deleteReply(req.params.commentId)
 			res.json(posts)
 		})
 		// this.app.get('/posts/:id', async (req,res)=>{

@@ -25,8 +25,16 @@ class CommentController {
         return comment;
     }
     async createReply(obj,parent_id){
-        console.log(obj)
         const comment = await Comment.create({text:obj.text,post_id:obj.post_id,user_id:obj.user_id,parent_id:parent_id})
+        return comment;
+    }
+    async getReply(offset, limit = 15,parent_id){
+        const comments = await Comment.findAll({where:{parent_id:parent_id}, offset, limit })
+        return comments;
+    }
+    async deleteReply(comment_id){
+        const comment = await Comment.destroy({ where:{id:comment_id} })
+        
         return comment;
     }
   
