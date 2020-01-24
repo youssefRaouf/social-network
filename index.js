@@ -24,6 +24,11 @@ app.use((req, res, next) => {
     next();
   });
 
+  app.use((req, res, next) => {
+    // TODO: add token check here
+    req.userId = 3;
+    next();
+  });
   
 const port = 3000
 const router = new Router(app);
