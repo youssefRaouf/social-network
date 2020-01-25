@@ -1,6 +1,22 @@
-import {Post,User} from '../../dbhelper';
+import {Post,User,Emoji} from '../../dbhelper';
 
 class UserController {
+
+    emojisMapper(post){
+        const emojis = {};
+        post.emojis.forEach(emoji =>{
+            if(!emojis[emoji.type]){
+                emojis[emoji.type] = 1;
+            }else{
+                emojis[emoji.type] = emojis[emoji.type] + 1;
+            }
+
+        })
+        return {
+            ...post,
+            emojis
+        }
+    }
 
     async getUsers(offset, limit = 15){
         const users = await User.findAll({ offset, limit })
@@ -27,8 +43,13 @@ class UserController {
     }
   
     async getPostsByUserId(offset, limit = 15,user_id){
-        const posts = await Post.findAll({ where:{user_id:user_id}, offset, limit, order: [['id', 'DESC']] } )
-        return posts.map(post=> post.toJSON());
+        const posts = await Post.findAll({ where:{user_id:user_id}, offset, limit, order: [['id', 'DESC']], include: [{
+            model: Emoji,
+            as: 'emojis'
+          }] } )
+        return posts.map(post=> post.toJSON()).map(this.emojisMapper);
+        
+        // return posts.map(post=> post.toJSON());
     }
 
 }

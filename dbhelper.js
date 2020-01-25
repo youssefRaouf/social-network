@@ -18,6 +18,8 @@ export const Post = sequelize.define(
 		timestamps: false,
 	}
 );
+
+
 export const User = sequelize.define(
 	'users',
 	{
@@ -89,3 +91,5 @@ export const Emoji = sequelize.define(
 		timestamps: false,
 	}
 );
+
+Post.hasMany(Emoji, {foreignKey: 'post_id', sourceKey: 'id'});

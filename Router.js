@@ -17,20 +17,32 @@ export default class Router {
 			{
 				where: {
 					post_id:postIds,
-					// post_id: {
-					// 	$in: [1,2,3,4]
-					// },
 					user_id: userId
 				}
 			}
 		)
 		emojees = emojees.map(emo => emo.toJSON())
 
+		// let emojis = await Emoji.findAll(
+		// 	{where: {
+		// 		post_id:postIds,
+		// 	}
+		// 	}
+		// )
+		// emojis = emojis.map(emo => emo.toJSON())
+        // let emojisCount=[0,0,0,0]
+        //   for(const i=0;i<emojis.length;i++){
+		// 	  emojisCount[emojis[i]-1]++;
+		//   }
 		posts = posts.map(post => {
-			const myEmojees = emojees.filter(emojee => emojee.post_id === post.id);
+			const myEmojis = emojees.filter(emojee => emojee.post_id === post.id);
+			// let emojisCount=[0,0,0,0]
+			// const Emojis = emojis.filter(emojee => emojee.post_id === post.id);
+
 			return {
 				...post,
-				myEmojees
+				myEmojis,
+				// Emojis
 			}
 		})
 		// console.log(posts)
@@ -57,7 +69,7 @@ export default class Router {
 		})
 		this.app.put('/posts/:postId', async (req,res)=>{
 			let post = await PostsController.updatePost(req.body,req.params.postId)
-			post = (await this.addCurrentUserEmojsToPosts([post], req.userId))[0];
+			// post = (await this.addCurrentUserEmojsToPosts([post], req.userId))[0];
 			res.json(post)
 		})
 		this.app.delete('/posts/:postId', async (req,res)=>{

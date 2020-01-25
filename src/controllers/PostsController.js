@@ -1,15 +1,39 @@
-import {Post,Comment} from '../../dbhelper';
+import {Post,Comment, Emoji} from '../../dbhelper';
 
 class PostsController {
 
+    emojisMapper(post){
+        const emojis = {};
+        post.emojis.forEach(emoji =>{
+            if(!emojis[emoji.type]){
+                emojis[emoji.type] = 1;
+            }else{
+                emojis[emoji.type] = emojis[emoji.type] + 1;
+            }
+
+        })
+        return {
+            ...post,
+            emojis
+        }
+    }
+
     async getPosts(offset, limit = 15){        
-        const posts = await Post.findAll({ offset, limit, order: [['id', 'DESC']] })
-        return posts.map(post=> post.toJSON());
+        const posts = await Post.findAll({ offset, limit, order: [['id', 'DESC']], include: [{
+              model: Emoji,
+              as: 'emojis'
+            }]
+          })
+        return posts.map(post=> post.toJSON()).map(this.emojisMapper);
     }
     
+
     async getPostsById(id){
-        const posts = await Post.findAll({ where:{id:id} })
-        return posts.map(post=> post.toJSON());
+        const posts = await Post.findOne({ where:{id:id}, include: [{
+            model: Emoji,
+            as: 'emojis'
+          }] })
+          return this.emojisMapper(posts.toJSON());
     }
     async createPost(object){
         const post = await Post.create(object)
