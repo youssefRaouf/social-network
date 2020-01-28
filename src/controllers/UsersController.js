@@ -1,9 +1,10 @@
-import {Post,User,Emoji} from '../../dbhelper';
+import {Post,User,Emoji,Comment} from '../../dbhelper';
 
 class UserController {
 
     emojisMapper(post){
         const emojis = {};
+        const comments= post.comments.length;
         post.emojis.forEach(emoji =>{
             if(!emojis[emoji.type]){
                 emojis[emoji.type] = 1;
@@ -14,7 +15,8 @@ class UserController {
         })
         return {
             ...post,
-            emojis
+            emojis,
+            comments
         }
     }
 
@@ -46,7 +48,16 @@ class UserController {
         const posts = await Post.findAll({ where:{user_id:user_id}, offset, limit, order: [['id', 'DESC']], include: [{
             model: Emoji,
             as: 'emojis'
-          }] } )
+          },
+          {
+            model: Comment,
+            as:'comments'
+        },
+    //     {
+    //         model: User,
+    //         as:'user',
+    // }
+        ] } )
         return posts.map(post=> post.toJSON()).map(this.emojisMapper);
         
         // return posts.map(post=> post.toJSON());
