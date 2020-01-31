@@ -4,7 +4,7 @@ class PostsController {
 
     emojisMapper(post){
         const comments= post.comments.length;
-        const emojis = {};
+        const emojis = [];
         post.emojis.forEach(emoji =>{
             if(!emojis[emoji.type]){
                 emojis[emoji.type] = 1;
