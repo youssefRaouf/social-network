@@ -64,7 +64,7 @@ export default class Router {
 		})
 
 		this.app.post('/posts', async (req,res)=>{
-			const post = await PostsController.createPost(req.body)
+			const post = await PostsController.createPost(req.body,req.userId)
 			res.json(post)
 		})
 		this.app.put('/posts/:postId', async (req,res)=>{
@@ -186,7 +186,7 @@ export default class Router {
 		})
 
 		this.app.post('/emojis', async (req,res)=>{
-			const emojis = await EmojisController.createEmoji(req.body)
+			const emojis = await EmojisController.createEmoji(req.body,req.userId)
 			res.json(emojis)
 		})
 		this.app.delete('/emojis', async (req,res)=>{

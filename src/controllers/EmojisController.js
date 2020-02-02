@@ -6,8 +6,8 @@ class EmojisController {
     //     const emojis = await Emoji.findAll({ where:{from_user},offset, limit })
     //     return emojis;
     // }
-    async createEmoji(object){
-        const emojis = await Emoji.create(object)
+    async createEmoji(object,user_id){
+        const emojis = await Emoji.create({...object, user_id})
         return emojis;
     }
     async deleteEmoji(object){

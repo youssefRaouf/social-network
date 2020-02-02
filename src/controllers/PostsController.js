@@ -57,8 +57,8 @@ class PostsController {
         ] })
           return this.emojisMapper(posts.toJSON());
     }
-    async createPost(object){
-        const post = await Post.create(object)
+    async createPost(object,user_id){
+        const post = await Post.create({ ...object, user_id })
         return post;
     }
     async deletePost(post_id){
