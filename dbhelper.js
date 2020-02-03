@@ -96,3 +96,5 @@ Post.hasMany(Emoji, {foreignKey: 'post_id', sourceKey: 'id'});
 Post.hasMany(Comment, {foreignKey: 'post_id', sourceKey: 'id'});
 // User.hasMany(Post, {foreignKey: 'user_id', sourceKey: 'id'});
 Post.belongsTo(User,{foreignKey:'user_id'});
+Comment.belongsTo(User,{foreignKey:'user_id'});
+

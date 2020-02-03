@@ -71,7 +71,10 @@ class PostsController {
     }
    
     async getPostComments(offset, limit = 15,post_id){
-        const comments = await Comment.findAll({ offset, limit,where:{post_id:post_id} })
+        const comments = await Comment.findAll({ offset, limit,where:{post_id:post_id}, include: [{
+            model: User,
+            as: 'user'
+          }], })
         return comments.map(post=> post.toJSON());
         
     }
