@@ -114,7 +114,7 @@ export default class Router {
 			res.json(posts)
 		})
 		this.app.post('/comments', async (req,res)=>{
-			const comments = await CommentsController.createComment(req.body)
+			const comments = await CommentsController.createComment(req.body,req.userId)
 			res.json(comments)
 		})
 		this.app.put('/comments/:commentId', async (req,res)=>{

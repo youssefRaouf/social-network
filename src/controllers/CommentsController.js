@@ -10,9 +10,9 @@ class CommentController {
         const comments = await Comment.findAll({ where:{id:comment_id}})
         return comments;
     }
-    async createComment(object){
+    async createComment(object,user_id){
         console.log(object)
-        const comment = await Comment.create(object)
+        const comment = await Comment.create({ ...object, user_id })
         return comment;
     }
     async updateComment(obj,comment_id){
