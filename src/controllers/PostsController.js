@@ -1,4 +1,5 @@
 import {Post,Comment, Emoji, User} from '../../dbhelper';
+import {io} from '../../index'
 
 class PostsController {
 
@@ -58,7 +59,18 @@ class PostsController {
           return this.emojisMapper(posts.toJSON());
     }
     async createPost(object,user_id){
-        const post = await Post.create({ ...object, user_id })
+        const post = await Post.create({ ...object, user_id }).then(io.on('connection',function(socket){
+            socket.on('createPost',(post)=>{
+                io.emit("createPost", post);
+                console.log(post)
+            })
+          }))
+        // io.on('connection',function(socket){
+        //     socket.on('createPost',()=>{
+        //         io.emit("createPost", post);
+        //         console.log(post)
+        //     })
+        //   })
         return post;
     }
     async deletePost(post_id){

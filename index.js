@@ -4,6 +4,7 @@ import "regenerator-runtime/runtime";
 import bodyParser from 'body-parser';
 import Router from './Router';
 import express from 'express';
+import socket from 'socket.io'
 const app = express()
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -33,4 +34,9 @@ app.use((req, res, next) => {
 const port = 4000
 const router = new Router(app);
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+ let server=app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+ export let io =socket(server);
+ io.on('connection',function(socket){
+  console.log("connect")
+  //  socket.on("createPost",()=>console.log("create"))
+ })
