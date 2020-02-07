@@ -34,9 +34,19 @@ app.use((req, res, next) => {
 const port = 4000
 const router = new Router(app);
 
- let server=app.listen(port, () => console.log(`Example app listening on port ${port}!`))
- export let io =socket(server);
- io.on('connection',function(socket){
-  console.log("connect")
-  //  socket.on("createPost",()=>console.log("create"))
- })
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+//  export let io =socket(server);
+//  io.on('connection',function(socket){
+//   console.log("connect")
+//   //  socket.on("createPost",()=>console.log("create"))
+//  })
+
+
+const io = require('socket.io')(4500);
+const chat = io
+  .of('/chat')
+  .on('connection', function (socket) {
+    
+  });
+
+  export {chat};
