@@ -43,10 +43,20 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 
 const io = require('socket.io')(4500);
-const chat = io
-  .of('/chat')
+const posts = io
+  .of('/posts')
   .on('connection', function (socket) {
     
   });
+  
+  const commentsSocket = io
+  .of('/posts/comments')
+  .on('connection', (socket) => {
+  });
 
-  export {chat};
+  const reactionsSocket = io
+  .of('/posts/reactions')
+  .on('connection', (socket) => {
+  });
+
+  export {posts, commentsSocket, reactionsSocket};

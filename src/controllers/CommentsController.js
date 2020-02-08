@@ -1,4 +1,5 @@
-import {Post,Comment} from '../../dbhelper';
+import {Post,Comment,User} from '../../dbhelper';
+import { commentsSocket, reactionsSocket } from '../..';
 
 class CommentController {
 
@@ -11,8 +12,19 @@ class CommentController {
         return comments;
     }
     async createComment(object,user_id){
-        console.log(object)
+        // console.log(object)
         const comment = await Comment.create({ ...object, user_id })
+        const comment2 = await Comment.findOne({where:{id:comment.id}, include: [{
+            model: User,
+            as: 'user'
+          }], })
+        const commentsCount = await Comment.count({
+            where: {
+                post_id: comment.post_id
+            }
+        });  
+        commentsSocket.emit("new_comment"+comment.post_id,comment2);
+        reactionsSocket.emit(`comments_count_${comment.post_id}`, commentsCount);
         return comment;
     }
     async updateComment(obj,comment_id){

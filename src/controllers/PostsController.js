@@ -1,5 +1,5 @@
 import {Post,Comment, Emoji, User} from '../../dbhelper';
-import {chat} from '../../index'
+import {posts} from '../../index'
 
 class PostsController {
 
@@ -62,7 +62,7 @@ class PostsController {
         const post = await Post.create({ ...object, user_id })
      const post2 =await  this.getPostsById(post.id)  
      console.log(post2)     
-        chat.emit("new_post", post2);
+        posts.emit("new_post", post2);
         return post;
     }
     async deletePost(post_id){
