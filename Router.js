@@ -193,5 +193,9 @@ export default class Router {
 			const emojis = await EmojisController.deleteEmoji(req.body)
 			res.json(emojis)
 		})
+		this.app.put('/emojis', async (req,res)=>{
+			const emojis = await EmojisController.updateEmoji(req.body,req.userId)
+			res.json(emojis)
+		})
 	}
 }
