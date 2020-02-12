@@ -1,16 +1,16 @@
-import {Post,Comment, Emoji, User} from '../../dbhelper';
-import {posts} from '../../index'
+import { Post, Comment, Emoji, User } from '../../dbhelper';
+import { posts } from '../../index'
 
 class PostsController {
 
-    emojisMapper(post){
-        const comments= post.comments.length;
+    emojisMapper(post) {
+        const comments = post.comments.length;
         const emojis = [];
-        const emojisCount=post.emojis.length;
-        post.emojis.forEach(emoji =>{
-            if(!emojis[emoji.type]){
+        const emojisCount = post.emojis.length;
+        post.emojis.forEach(emoji => {
+            if (!emojis[emoji.type]) {
                 emojis[emoji.type] = 1;
-            }else{
+            } else {
                 emojis[emoji.type] = emojis[emoji.type] + 1;
             }
 
@@ -21,78 +21,83 @@ class PostsController {
             emojis,
             comments,
             emojisCount
-            
+
         }
     }
 
-    async getPosts(offset, limit = 15){        
-        const posts = await Post.findAll({ offset, limit, order: [['id', 'DESC']], include: [{
-              model: Emoji,
-              as: 'emojis'
+    async getPosts(offset, limit = 15) {
+        const posts = await Post.findAll({
+            offset, limit, order: [['id', 'DESC']], include: [{
+                model: Emoji,
+                as: 'emojis'
             },
             {
                 model: Comment,
-                as:'comments'
+                as: 'comments'
 
             },
             {
                 model: User,
-                as:'user',
-        }
-        ]
-          })
-        return posts.map(post=> post.toJSON()).map(this.emojisMapper);
+                as: 'user',
+            }
+            ]
+        })
+        return posts.map(post => post.toJSON()).map(this.emojisMapper);
     }
-    
 
-    async getPostsById(id){
-        const posts = await Post.findOne({ where:{id:id}, include: [{
-            model: Emoji,
-            as: 'emojis'
-          },
-          {
-            model: Comment,
-            as:'comments'
-        },
-        {
-            model: User,
-            as:'user',
+
+     async getPostsById(id) {
+        const posts = await Post.findOne({
+            where: { id: id }, include: [{
+                model: Emoji,
+                as: 'emojis'
+            },
+            {
+                model: Comment,
+                as: 'comments'
+            },
+            {
+                model: User,
+                as: 'user',
+            }
+            ]
+        })
+        return this.emojisMapper(posts.toJSON());
     }
-        ] })
-          return this.emojisMapper(posts.toJSON());
-    }
-    async createPost(object,user_id){
+    async createPost(object, user_id) {
+        console.log(object)
         const post = await Post.create({ ...object, user_id })
-     const post2 =await  this.getPostsById(post.id)  
-     console.log(post2)     
+        const post2 = await this.getPostsById(post.id)
+        console.log(post2)
         posts.emit("new_post", post2);
         return post;
     }
-    async deletePost(post_id){
-        const post = await Post.destroy({ where:{id:post_id} })
+    async deletePost(post_id) {
+        const post = await Post.destroy({ where: { id: post_id } })
         return post;
     }
-    async updatePost(obj,post_id){
-        const post = await Post.update(obj,{ where:{id:post_id} })
+    async updatePost(obj, post_id) {
+        const post = await Post.update(obj, { where: { id: post_id } })
         return post;
     }
-   
-    async getPostComments(offset, limit = 15,post_id){
-        const comments = await Comment.findAll({ offset, limit,where:{post_id:post_id}, include: [{
-            model: User,
-            as: 'user'
-          }], })
-        return comments.map(post=> post.toJSON());
-        
+
+    async getPostComments(offset, limit = 15, post_id) {
+        const comments = await Comment.findAll({
+            offset, limit, where: { post_id: post_id }, include: [{
+                model: User,
+                as: 'user'
+            }],
+        })
+        return comments.map(post => post.toJSON());
+
     }
-    async createComment(post_id,user_id,text,parent_id){
-        const post = await Comment.create({post_id:post_id,user_id:user_id,text:text,parent_id:parent_id})
+    async createComment(post_id, user_id, text, parent_id) {
+        const post = await Comment.create({ post_id: post_id, user_id: user_id, text: text, parent_id: parent_id })
         return post;
     }
-    async deleteComment(post_id,id){
-        const post = await Comment.destroy({ where:{id:id} })
+    async deleteComment(post_id, id) {
+        const post = await Comment.destroy({ where: { id: id } })
         return post;
     }
 }
-
 export default new PostsController();

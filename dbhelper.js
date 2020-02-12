@@ -11,6 +11,8 @@ export const Post = sequelize.define(
 		},
 		text: Sequelize.STRING,
 		user_id: Sequelize.INTEGER,
+		url: Sequelize.STRING,
+
 		// level: Sequelize.INTEGER,
 		// company_id: { type: Sequelize.INTEGER, defaultValue: 1 },
 	},

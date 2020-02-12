@@ -190,7 +190,7 @@ export default class Router {
 			res.json(emojis)
 		})
 		this.app.delete('/emojis', async (req,res)=>{
-			const emojis = await EmojisController.deleteEmoji(req.body)
+			const emojis = await EmojisController.deleteEmoji(req.body,req.userId)
 			res.json(emojis)
 		})
 		this.app.put('/emojis', async (req,res)=>{
