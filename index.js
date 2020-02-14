@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 const port = process.env.PORT || 4000
 const router = new Router(app);
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Social app listening on port ${port}!`))
 //  export let io =socket(server);
 //  io.on('connection',function(socket){
 //   console.log("connect")
@@ -42,7 +42,7 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 //  })
 
 
-const io = require('socket.io')(process.env.PORT || 4500);
+const io = require('socket.io')(4500);
 const posts = io
   .of('/posts')
   .on('connection', function (socket) {
