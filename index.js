@@ -41,8 +41,9 @@ app.listen(port, () => console.log(`Social app listening on port ${port}!`))
 //   //  socket.on("createPost",()=>console.log("create"))
 //  })
 
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
 
-const io = require('socket.io')(4500);
 const posts = io
   .of('/posts')
   .on('connection', function (socket) {
