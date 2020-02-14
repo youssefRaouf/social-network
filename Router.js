@@ -51,6 +51,7 @@ export default class Router {
 	}
 
 	initializeRoutes() {
+		this.app.get('/test', (req,res)=>res.json({"status": "success"}));
 		this.app.get('/posts', async (req,res)=>{
 			const {offset = 0, limit = 15} = req.query;
 			let posts = await PostsController.getPosts(Number(offset), Number(limit))
