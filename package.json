@@ -9,7 +9,6 @@
   "scripts": {
     "start": "nodemon --exec babel-node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel 'src/' -d 'dist' --delete-dir-on-start --copy-files --include-dotfiles",
     "prod": "NODE_ENV=production node dist/index.js"
   },
   "author": "daniel",
