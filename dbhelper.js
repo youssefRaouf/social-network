@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('mysql://admin:admin@localhost/socialdb');
+const sequelize = new Sequelize('mysql://WxxM5D2QyF:XzfKzISrK2@remotemysql.com:3306/WxxM5D2QyF');
 
 export const Post = sequelize.define(
 	'posts',
