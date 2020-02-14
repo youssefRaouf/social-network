@@ -4,8 +4,13 @@ import "regenerator-runtime/runtime";
 import bodyParser from 'body-parser';
 import Router from './Router';
 import express from 'express';
-import socket from 'socket.io'
+import socket from 'socket.io';
+import http from 'http';
+
 const app = express()
+const server = http.createServer(app)
+const io = socket(server)
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use((req, res, next) => {
@@ -34,15 +39,8 @@ app.use((req, res, next) => {
 const port = process.env.PORT || 4000
 const router = new Router(app);
 
-app.listen(port, () => console.log(`Social app listening on port ${port}!`))
-//  export let io =socket(server);
-//  io.on('connection',function(socket){
-//   console.log("connect")
-//   //  socket.on("createPost",()=>console.log("create"))
-//  })
+server.listen(port, () => console.log(`Social app listening on port ${port}!`))
 
-const server = require('http').createServer(app)
-const io = require('socket.io')(server)
 
 const posts = io
   .of('/posts')
