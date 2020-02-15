@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('mysql://WxxM5D2QyF:XzfKzISrK2@remotemysql.com:3306/WxxM5D2QyF');
+const sequelize = new Sequelize('mysql://WxxM5D2QyF:r0n3QDFWxq@remotemysql.com:3306/WxxM5D2QyF');
 
 export const Post = sequelize.define(
 	'posts',
