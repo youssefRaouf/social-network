@@ -1,4 +1,5 @@
 import {Post,User,Emoji,Comment} from '../../dbhelper';
+import { UUID } from 'sequelize';
 
 class UserController {
 
@@ -31,7 +32,16 @@ class UserController {
        
     }
     async createUser(obj){
-        const user = await User.create(obj)
+        // const token = new UUID();
+        let jwt = require('jsonwebtoken')
+       let token= jwt.sign({user:obj},'secret')
+        const user = await User.create({...obj})
+        console.log(token)
+        return token;
+    }
+    async checkUser(obj){
+        console.log("sssdg")
+        const user = await User.findOne({where:{email:obj.email}})
         return user;
     }
     async updateUser(obj,user_id){

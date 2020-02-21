@@ -32,7 +32,13 @@ app.use((req, res, next) => {
 
   app.use((req, res, next) => {
     // TODO: add token check here
-    req.userId = 3;
+    let jwt = require('jsonwebtoken')
+    const token = req.header.token
+    let object = jwt.verify(token, 'secret');
+    console.log("el rg3na ml token",object);
+    // req.userId = object.user.id;
+    req.userId =3;
+
     next();
   });
   

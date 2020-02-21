@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+// const sequelize=new Sequelize('mysql://admin:admin@localhost/socialdb');
 const sequelize = new Sequelize('mysql://WxxM5D2QyF:r0n3QDFWxq@remotemysql.com:3306/WxxM5D2QyF');
 
 export const Post = sequelize.define(
@@ -13,6 +14,8 @@ export const Post = sequelize.define(
 		user_id: Sequelize.INTEGER,
 		url: Sequelize.STRING,
 		created_at: Sequelize.TIME,
+		video_name: Sequelize.STRING,
+
 
 		// level: Sequelize.INTEGER,
 		// company_id: { type: Sequelize.INTEGER, defaultValue: 1 },
@@ -32,7 +35,10 @@ export const User = sequelize.define(
 			autoIncrement: true
 		},
 		name: Sequelize.STRING,
+		email: Sequelize.STRING,
 		image_url: Sequelize.STRING,
+		phone: Sequelize.INTEGER,
+
 		// level: Sequelize.INTEGER,
 		// company_id: { type: Sequelize.INTEGER, defaultValue: 1 },
 	},

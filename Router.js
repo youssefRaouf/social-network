@@ -94,6 +94,10 @@ export default class Router {
 			const posts = await UsersController.createUser(req.body)
 			res.json(posts)
 		})
+		this.app.post('/checkUsers', async (req,res)=>{
+			const users = await UsersController.checkUser(req.body)
+			res.json(users)
+		})
 		this.app.put('/users/:userId', async (req,res)=>{
 			const posts = await UsersController.updateUser(req.body,req.params.userId)
 			res.json(posts)
