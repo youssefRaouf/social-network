@@ -6,7 +6,7 @@ import Router from './Router';
 import express from 'express';
 import socket from 'socket.io';
 import http from 'http';
-
+export let jwt = require('jsonwebtoken')
 const app = express()
 const server = http.createServer(app)
 const io = socket(server)
@@ -32,13 +32,18 @@ app.use((req, res, next) => {
 
   app.use((req, res, next) => {
     // TODO: add token check here
-    let jwt = require('jsonwebtoken')
-    const token = req.header.token
+    // let jwt = require('jsonwebtoken')
+    let token = req.header('token')
+    console.log(token)
+   if(token==='null'){
+   console.log("hna")
+   }
+   else if(token){
     let object = jwt.verify(token, 'secret');
-    console.log("el rg3na ml token",object);
-    // req.userId = object.user.id;
+    req.userId = object.user.id;}
+    else{
     req.userId =3;
-
+    }
     next();
   });
   

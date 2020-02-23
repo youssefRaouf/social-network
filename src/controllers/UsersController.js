@@ -1,6 +1,7 @@
 import {Post,User,Emoji,Comment} from '../../dbhelper';
 import { UUID } from 'sequelize';
 
+import {jwt} from '../../index'
 class UserController {
 
     emojisMapper(post){
@@ -31,11 +32,24 @@ class UserController {
         return users.map(post=> post.toJSON());
        
     }
+    async getUserByEmail(email){
+        const users = await User.findOne({ where:{email:email} })
+        let token= jwt.sign({user:users},'secret')
+        return token
+        
+    }
+    async getMyProfile(id){
+        console.log(id)
+        const user = await User.findOne({ where:{id:id} })
+        console.log(user);
+        return user
+        
+    }
     async createUser(obj){
         // const token = new UUID();
-        let jwt = require('jsonwebtoken')
-       let token= jwt.sign({user:obj},'secret')
+             
         const user = await User.create({...obj})
+        let token= jwt.sign({user:user},'secret')
         console.log(token)
         return token;
     }

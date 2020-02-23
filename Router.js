@@ -86,9 +86,15 @@ export default class Router {
 			const posts = await UsersController.getUsers(Number(offset), Number(limit))
 			res.json(posts)
 		})
-		this.app.get('/users/:userId', async (req,res)=>{
-			const posts = await UsersController.getUsersByUserId(req.params.userId)
+		this.app.get('/users/:email', async (req,res)=>{
+			console.log("leh d5l hna")
+			const posts = await UsersController.getUserByEmail(req.params.email)
 			res.json(posts)
+		})
+		this.app.get('/users/profile/myProfile', async (req,res)=>{
+			console.log("d5lna gwa el profile")
+			const user = await UsersController.getMyProfile(req.userId)
+			res.json(user)
 		})
 		this.app.post('/users', async (req,res)=>{
 			const posts = await UsersController.createUser(req.body)
