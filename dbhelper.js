@@ -103,7 +103,11 @@ export const Emoji = sequelize.define(
 
 Post.hasMany(Emoji, {foreignKey: 'post_id', sourceKey: 'id'});
 Post.hasMany(Comment, {foreignKey: 'post_id', sourceKey: 'id'});
-// User.hasMany(Post, {foreignKey: 'user_id', sourceKey: 'id'});
+// User.hasMany(Follower,{foreignKey:'from_user'});
+// User.hasMany(Follower,{foreignKey:'to_user'});
+// // User.hasMany(Post, {foreignKey: 'user_id', sourceKey: 'id'});
+Follower.belongsTo(User,{foreignKey:'from_user', as: 'from'})
+Follower.belongsTo(User,{foreignKey:'to_user', as: 'to'})
 Post.belongsTo(User,{foreignKey:'user_id'});
 Comment.belongsTo(User,{foreignKey:'user_id'});
 

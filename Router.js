@@ -161,21 +161,21 @@ export default class Router {
 			res.json(posts)
 		})
 
-		this.app.get('/users/:userId/followedToUsers', async (req,res)=>{
+		this.app.get('/users/:userId/followToUsers', async (req,res)=>{
 			const {offset = 0, limit = 15} = req.query;
 			const following = await FollowersController.getFollowTo(Number(offset), Number(limit),req.params.userId)
 			res.json(following)
 		})
-		this.app.post('/users/:userId/followedToUsers', async (req,res)=>{
-			const following = await FollowersController.follow(req.params.userId,req.body.to_user)
+		this.app.post('/users/followToUsers', async (req,res)=>{
+			const following = await FollowersController.follow(req.userId,req.body.to_user)
 			res.json(following)
 		})
-		this.app.delete('/users/:userId/followedToUsers/:followedTo', async (req,res)=>{
+		this.app.delete('/users/:userId/followToUsers/:followedTo', async (req,res)=>{
 			const following = await FollowersController.deleteFollow(req.params.userId,req.params.followedTo)
 			res.json(following)
 		})
 
-		this.app.get('/users/:userId/followedfromUsers', async (req,res)=>{
+		this.app.get('/users/:userId/followFromUsers', async (req,res)=>{
 			const {offset = 0, limit = 15} = req.query;
 			const following = await FollowersController.getFollowFrom(Number(offset), Number(limit),req.params.userId)
 			res.json(following)
