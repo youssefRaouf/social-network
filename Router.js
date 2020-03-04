@@ -170,8 +170,8 @@ export default class Router {
 			const following = await FollowersController.follow(req.userId,req.body.to_user)
 			res.json(following)
 		})
-		this.app.delete('/users/:userId/followToUsers/:followedTo', async (req,res)=>{
-			const following = await FollowersController.deleteFollow(req.params.userId,req.params.followedTo)
+		this.app.delete('/users/:userId/followToUsers', async (req,res)=>{
+			const following = await FollowersController.deleteFollow(req.userId,req.params.userId)
 			res.json(following)
 		})
 
@@ -180,7 +180,6 @@ export default class Router {
 			const following = await FollowersController.getFollowFrom(Number(offset), Number(limit),req.params.userId)
 			res.json(following)
 		})
-
 
 		this.app.get('/posts/:id/comments', async (req,res)=>{
 			const {offset = 0, limit = 15} = req.query;

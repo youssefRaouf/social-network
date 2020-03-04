@@ -3,11 +3,26 @@ import { Post, Comment, Follower,User } from '../../dbhelper';
 class FollowersController {
 
     async getFollowTo(offset, limit = 15, from_user) {
+        if(from_user==null){
+            const followers = await Follower.findAll({
+                where: { from_user:req.userId },include: [{
+                    model: User,
+                    as: 'to'
+                }],
+            })
+            return followers;
+        }
         const followers = await Follower.findAll({
             where: { from_user }, offset, limit, include: [{
                 model: User,
                 as: 'to'
             }],
+        })
+        return followers;
+    }
+    async getMyUserFollowings(from_user) {
+        const followers = await Follower.findAll({
+            where: { from_user }
         })
         return followers;
     }
@@ -22,7 +37,6 @@ class FollowersController {
         return followers;
     }
     async follow(from_user, to_user) {
-        console.log("gwa el create follow",from_user,to_user)
         const followers = await Follower.create({ from_user: from_user, to_user: to_user })
         return followers;
     }

@@ -34,7 +34,6 @@ app.use((req, res, next) => {
     // TODO: add token check here
     // let jwt = require('jsonwebtoken')
     let token = req.header('token')
-    console.log(token)
    if(token==='null'){
    console.log("hna")
    }
