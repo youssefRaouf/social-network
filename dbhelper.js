@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
-// const sequelize=new Sequelize('mysql://admin:admin@localhost/socialdb');
-const sequelize = new Sequelize('mysql://WxxM5D2QyF:r0n3QDFWxq@remotemysql.com:3306/WxxM5D2QyF');
+const sequelize=new Sequelize('mysql://admin:admin@localhost/socialdb');
+// const sequelize = new Sequelize('mysql://WxxM5D2QyF:r0n3QDFWxq@remotemysql.com:3306/WxxM5D2QyF');
 
 export const Post = sequelize.define(
 	'posts',
@@ -40,6 +40,35 @@ export const User = sequelize.define(
 		phone: Sequelize.INTEGER,
 
 		// level: Sequelize.INTEGER,
+		// company_id: { type: Sequelize.INTEGER, defaultValue: 1 },
+	},
+	{
+		timestamps: false,
+	}
+);
+export const Message = sequelize.define(
+	'messages',
+	{
+		text: Sequelize.STRING,
+		from_user: Sequelize.INTEGER,
+		room_id: Sequelize.INTEGER
+		// company_id: { type: Sequelize.INTEGER, defaultValue: 1 },
+	},
+	{
+		timestamps: false,
+	}
+);
+export const Room = sequelize.define(
+	'room',
+	{
+		id: {
+			type: Sequelize.INTEGER,
+			primaryKey: true,
+			autoIncrement: true
+		},
+		update_at: Sequelize.TIME,
+		user1_id: Sequelize.INTEGER,
+		user2_id: Sequelize.INTEGER,
 		// company_id: { type: Sequelize.INTEGER, defaultValue: 1 },
 	},
 	{
@@ -108,6 +137,8 @@ Post.hasMany(Comment, {foreignKey: 'post_id', sourceKey: 'id'});
 // // User.hasMany(Post, {foreignKey: 'user_id', sourceKey: 'id'});
 Follower.belongsTo(User,{foreignKey:'from_user', as: 'from'})
 Follower.belongsTo(User,{foreignKey:'to_user', as: 'to'})
+Room.belongsTo(User,{foreignKey:'user1_id', as: 'user1'})
+Room.belongsTo(User,{foreignKey:'user2_id', as: 'user2'})
 Post.belongsTo(User,{foreignKey:'user_id'});
 Comment.belongsTo(User,{foreignKey:'user_id'});
 

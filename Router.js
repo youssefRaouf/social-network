@@ -4,6 +4,8 @@ import CommentsController from './src/controllers/CommentsController';
 import FollowersController from './src/controllers/FollowersController';
 import {Emoji} from './dbhelper'; 
 import EmojisController from './src/controllers/EmojisController';
+import MessagesController from './src/controllers/MessagesController';
+import RoomsController from './src/controllers/RoomsController';
 export default class Router {
 	constructor(app) {
 		this.app = app;
@@ -207,5 +209,27 @@ export default class Router {
 			const emojis = await EmojisController.updateEmoji(req.body,req.userId)
 			res.json(emojis)
 		})
+		this.app.get('/messages/:id', async (req,res)=>{
+			const {offset = 0, limit = 15} = req.query;
+			const following = await MessagesController.getMessages(Number(offset),Number(limit),req.params.id)
+			res.json(following)
+		})
+
+		this.app.post('/messages', async (req,res)=>{
+			const message = await MessagesController.createMessage(req.body,req.userId)
+			res.json(message)
+		})
+		this.app.delete('/messages', async (req,res)=>{
+			const emojis = await EmojisController.deleteEmoji(req.body,req.userId)
+			res.json(emojis)
+		})
+		this.app.get('/rooms/:id', async (req,res)=>{
+			const {offset = 0, limit = 15} = req.query;
+			
+			const following = await RoomsController.getRooms(Number(offset),Number(limit),req.params.id)
+			res.json(following)
+		})
+		
+
 	}
 }
