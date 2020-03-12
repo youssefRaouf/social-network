@@ -1,6 +1,6 @@
 import { Room, User } from '../../dbhelper';
 import { chatSocket } from '../..';
-
+import {or} from 'sequelize'
 class RoomsController {
 
     async getRooms(offset, limit, id) {
@@ -20,22 +20,19 @@ class RoomsController {
         return rooms;
     }
 
-    // async createMessage(object,user_id){
-    //     // console.log(object)
-    //     const message = await Message.create({ ...object,from_user:user_id })
-    //     // const comment2 = await Comment.findOne({where:{id:comment.id}, include: [{
-    //     //     model: User,
-    //     //     as: 'user'
-    //     //   }], })
-    //     // const commentsCount = await Comment.count({
-    //     //     where: {
-    //     //         post_id: comment.post_id
-    //     //     }
-    //     // });  
-    //     chatSocket.emit("new_message"+message.to_user+message.from_user,message);
-    //     // reactionsSocket.emit(`comments_count_${comment.post_id}`, commentsCount);
-    //     return message;
-    // }
+    async createRoom(user1_id,user2_id){
+        console.log("ll")
+        let room = await Room.findAll({where:{user1_id,user2_id}})
+        if(room.length===0){
+            room = await Room.findAll({where:{ user1_id:user2_id,user2_id:user1_id }})
+            if(room.length===0){
+            room = await Room.create({ user1_id,user2_id})
+
+            }
+            console.log("ll2")
+        }
+        return room[0];
+    }
     // async updateComment(obj,comment_id){
     //     const message = await Message.update(obj,{ where:{id:comment_id} })
     //     return message;

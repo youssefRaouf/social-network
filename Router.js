@@ -229,6 +229,10 @@ export default class Router {
 			const following = await RoomsController.getRooms(Number(offset),Number(limit),req.params.id)
 			res.json(following)
 		})
+		this.app.post('/rooms', async (req,res)=>{
+			const message = await RoomsController.createRoom(req.body.user2_id,req.body.user1_id)
+			res.json(message)
+		})
 		
 
 	}
