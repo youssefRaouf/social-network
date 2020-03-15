@@ -1,4 +1,4 @@
-import {Message} from '../../dbhelper';
+import {Message, Room} from '../../dbhelper';
 import { chatSocket } from '../..';
 
 class MessageController {
@@ -15,6 +15,7 @@ class MessageController {
     async createMessage(object,user_id){
         // console.log(object)
         const message = await Message.create({ ...object,from_user:user_id })
+               await Room.update({text:object.text},{where:{id:object.room_id}})
         // const comment2 = await Comment.findOne({where:{id:comment.id}, include: [{
         //     model: User,
         //     as: 'user'

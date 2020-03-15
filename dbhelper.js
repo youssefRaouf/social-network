@@ -69,6 +69,7 @@ export const Room = sequelize.define(
 		update_at: Sequelize.TIME,
 		user1_id: Sequelize.INTEGER,
 		user2_id: Sequelize.INTEGER,
+		text: Sequelize.STRING
 		// company_id: { type: Sequelize.INTEGER, defaultValue: 1 },
 	},
 	{

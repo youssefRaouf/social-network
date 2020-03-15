@@ -6,7 +6,7 @@ class RoomsController {
     async getRooms(offset, limit, id) {
         console.log("looooooooool")
         const rooms = await Room.findAll({
-            $or: [{ user1_id: id }, { user2_id: id }], offset, limit, order: [['id', 'DESC']]
+            $or: [{ user1_id: id }, { user2_id: id }], offset, limit, order: [['update_at', 'DESC']]
             ,
             include: [{
                 model: User,
