@@ -66,11 +66,14 @@ const posts = io
   const chatSocket = io
   .of('/chat')
   .on('connection', (socket) => {
-    console.log("ya rb asddddddddddddddddddddddddddddddddddddddd")
+  });
+  const roomSocket = io
+  .of('/room')
+  .on('connection', (socket) => {
   });
   const reactionsSocket = io
   .of('/posts/reactions')
   .on('connection', (socket) => {
   });
 
-  export {chatSocket,posts, commentsSocket, reactionsSocket};
+  export {roomSocket,chatSocket,posts, commentsSocket, reactionsSocket};

@@ -1,5 +1,5 @@
 import {Message, Room} from '../../dbhelper';
-import { chatSocket } from '../..';
+import { chatSocket ,roomSocket} from '../..';
 
 class MessageController {
 
@@ -26,6 +26,7 @@ class MessageController {
         //     }
         // });  
         chatSocket.emit("new_message"+message.room_id,message);
+        roomSocket.emit("new_message"+object.to_user,message);
         // reactionsSocket.emit(`comments_count_${comment.post_id}`, commentsCount);
         return message;
     }

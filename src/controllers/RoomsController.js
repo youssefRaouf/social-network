@@ -1,13 +1,23 @@
-import { Room, User } from '../../dbhelper';
+import { Room, User ,Sequelize} from '../../dbhelper';
 import { chatSocket } from '../..';
-import {or} from 'sequelize'
 class RoomsController {
 
     async getRooms(offset, limit, id) {
-        console.log("looooooooool")
+        
         const rooms = await Room.findAll({
-            $or: [{ user1_id: id }, { user2_id: id }], offset, limit, order: [['update_at', 'DESC']]
-            ,
+           where: {
+            [Sequelize.Op.or]: [
+                {
+                  user1_id: Number(id)
+                },
+                {
+                  user2_id: Number(id)
+                }
+              ]
+            }, 
+           offset, 
+           limit, 
+           order: [['update_at', 'DESC']],
             include: [{
                 model: User,
                 as: 'user1',
