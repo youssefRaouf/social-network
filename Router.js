@@ -233,6 +233,11 @@ export default class Router {
 			const message = await RoomsController.createRoom(req.body.user2_id,req.body.user1_id)
 			res.json(message)
 		})
+		this.app.post('/search', async (req,res)=>{
+			const {offset = 0, limit = 15} = req.query;
+			const users = await UsersController.search(Number(offset),Number(limit),req.body)
+			res.json(users)
+		})
 		
 
 	}

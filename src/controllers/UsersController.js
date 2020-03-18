@@ -1,4 +1,4 @@
-import { Post, User, Emoji, Comment } from '../../dbhelper';
+import { Post, User, Emoji, Comment,Sequelize } from '../../dbhelper';
 import { UUID } from 'sequelize';
 
 import { jwt } from '../../index'
@@ -39,6 +39,12 @@ class UserController {
         const users = await User.findOne({ where: { email: email } })
         let token = jwt.sign({ user: users }, 'secret')
         return token
+
+    }
+    async search(offset,limit=15,body) {
+        const users = await User.findAll({ where: { name: {[Sequelize.Op.like]: '%'+body.name+'%'} } ,offset,limit})
+        
+        return users
 
     }
     // async getMyProfile(id){
