@@ -3,7 +3,7 @@ import { chatSocket } from '../..';
 class RoomsController {
 
     async getRooms(offset, limit, id) {
-        
+
         const rooms = await Room.findAll({
            where: {
             [Sequelize.Op.or]: [
@@ -14,15 +14,15 @@ class RoomsController {
                   user2_id: Number(id)
                 }
               ]
-            }, 
-           offset, 
-           limit, 
+            },
+           offset,
+           limit,
            order: [['update_at', 'DESC']],
             include: [{
                 model: User,
                 as: 'user1',
             },
-        { 
+        {
             model: User,
             as : 'user2',
         }],
@@ -37,9 +37,9 @@ class RoomsController {
             room = await Room.findAll({where:{ user1_id:user2_id,user2_id:user1_id }})
             if(room.length===0){
             room = await Room.create({ user1_id,user2_id})
-
+             return room ;
             }
-            console.log("ll2")
+            console.log("ll2",room)
         }
         return room[0];
     }
