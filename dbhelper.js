@@ -15,6 +15,7 @@ export const Post = sequelize.define(
 		url: Sequelize.STRING,
 		created_at: Sequelize.TIME,
 		video_name: Sequelize.STRING,
+		isReported:Sequelize.BOOLEAN,
 
 
 		// level: Sequelize.INTEGER,

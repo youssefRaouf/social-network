@@ -238,7 +238,16 @@ export default class Router {
 			const users = await UsersController.search(Number(offset),Number(limit),req.body)
 			res.json(users)
 		})
-		
 
+		this.app.get('/reportPosts', async (req,res)=>{
+			const message = await PostsController.getReportPosts()
+			res.json(message)
+		})
+		this.app.put('/reportPosts', async (req,res)=>{
+			const message = await PostsController.reportPost(req.body.report,req.body.postId)
+			res.json(message)
+		})
+		
+            
 	}
 }

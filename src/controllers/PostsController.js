@@ -72,6 +72,20 @@ class PostsController {
         posts.emit("new_post", post2);
         return post;
     }
+
+    async reportPost(report,postId) {
+        const post = await Post.update({isReported:report}, { where: { id: postId} })
+        return post;
+    }
+
+    async getReportPosts() {
+        console.log("ss")
+        const posts = await Post.findAll({
+           order: [['id', 'DESC']], where:{isReported:true} 
+        })
+        return posts;
+    }
+
     async deletePost(post_id) {
         const post = await Post.destroy({ where: { id: post_id } })
         return post;
@@ -89,8 +103,8 @@ class PostsController {
             }],
         })
         return comments.map(post => post.toJSON());
-
     }
+    
     async createComment(post_id, user_id, text, parent_id) {
         const post = await Comment.create({ post_id: post_id, user_id: user_id, text: text, parent_id: parent_id })
         return post;
