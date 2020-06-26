@@ -13,43 +13,20 @@ export default class Router {
 	}
 
 	async addCurrentUserEmojsToPosts(posts, userId){
-		const postIds = posts.map(post => post.id);
-		console.log(postIds)
-		let emojees = await Emoji.findAll(
+		const postIds = posts.map(post => post._id.toString());
+		let emojees = await Emoji.find(
 			{
-				where: {
-					post_id:postIds,
-					user_id: userId
-				}
+				post_id: { $in: postIds},
+				user_id: userId
 			}
-		)
-		emojees = emojees.map(emo => emo.toJSON())
-
-		// let emojis = await Emoji.findAll(
-		// 	{where: {
-		// 		post_id:postIds,
-		// 	}
-		// 	}
-		// )
-		// emojis = emojis.map(emo => emo.toJSON())
-        // let emojisCount=[0,0,0,0]
-        //   for(const i=0;i<emojis.length;i++){
-		// 	  emojisCount[emojis[i]-1]++;
-		//   }
-		posts = posts.map(post => {
-			const myEmojis = emojees.filter(emojee => emojee.post_id === post.id);
-			// let emojisCount=[0,0,0,0]
-			// const Emojis = emojis.filter(emojee => emojee.post_id === post.id);
-
+			).exec();
+		return posts.map(post => {
+			const myEmojis = emojees.filter(emojee => emojee.post_id === post._id);
 			return {
 				...post,
-				myEmojis,
-				// Emojis
+				myEmojis
 			}
 		})
-		// console.log(posts)
-		// console.log(userId)
-		return posts;
 	}
 
 	initializeRoutes() {
@@ -58,6 +35,7 @@ export default class Router {
 			const {offset = 0, limit = 15} = req.query;
 			let posts = await PostsController.getPosts(Number(offset), Number(limit))
 			posts = await this.addCurrentUserEmojsToPosts(posts, req.userId)
+			console.log(posts)
 			res.json(posts)
 		})
 		this.app.get('/posts/:postId', async (req,res)=>{
@@ -67,7 +45,7 @@ export default class Router {
 		})
 
 		this.app.post('/posts', async (req,res)=>{
-			const post = await PostsController.createPost(req.body,req.userId)
+			const post = await PostsController.createPost(req.body,req.user)
 			res.json(post)
 		})
 		this.app.put('/posts/:postId', async (req,res)=>{
@@ -127,7 +105,7 @@ export default class Router {
 			res.json(posts)
 		})
 		this.app.post('/comments', async (req,res)=>{
-			const comments = await CommentsController.createComment(req.body,req.userId)
+			const comments = await CommentsController.createComment(req.body,req.user)
 			res.json(comments)
 		})
 		this.app.put('/comments/:commentId', async (req,res)=>{
@@ -142,12 +120,12 @@ export default class Router {
 
 		this.app.get('/comments/:id/comments', async (req,res)=>{
 			const {offset = 0, limit = 15} = req.query;
-			const posts = await CommentsController.getReply(Number(offset), Number(limit),req.params.id)
+			const posts = await CommentsController.getReply(Number(offset), Number(limit),req.params._id)
 			res.json(posts)
 		})
 
 		this.app.post('/comments/:id/comments', async (req,res)=>{
-			const posts = await CommentsController.createReply(req.body,req.params.id)
+			const posts = await CommentsController.createReply(req.body,req.params._id)
 			res.json(posts)
 		})
 
@@ -185,15 +163,15 @@ export default class Router {
 
 		this.app.get('/posts/:id/comments', async (req,res)=>{
 			const {offset = 0, limit = 15} = req.query;
-			const following = await PostsController.getPostComments(Number(offset), Number(limit),req.params.id)
+			const following = await PostsController.getPostComments(Number(offset), Number(limit),req.params._id)
 			res.json(following)
 		})
 		this.app.post('/posts/:id/comments', async (req,res)=>{
-			const following = await PostsController.createComment(req.params.id,req.body.user_id,req.body.text,req.body.parent_id)
+			const following = await PostsController.createComment(req.params._id,req.body.user_id,req.body.text,req.body.parent_id)
 			res.json(following)
 		})
 		this.app.delete('/posts/:id/comments/:commentId', async (req,res)=>{
-			const following = await PostsController.deleteComment(req.params.Id,req.params.commentId)
+			const following = await PostsController.deleteComment(req.params._id,req.params.commentId)
 			res.json(following)
 		})
 
@@ -211,7 +189,7 @@ export default class Router {
 		})
 		this.app.get('/messages/:id', async (req,res)=>{
 			const {offset = 0, limit = 15} = req.query;
-			const following = await MessagesController.getMessages(Number(offset),Number(limit),req.params.id)
+			const following = await MessagesController.getMessages(Number(offset),Number(limit),req.params._id)
 			res.json(following)
 		})
 
@@ -226,7 +204,7 @@ export default class Router {
 		this.app.get('/rooms/:id', async (req,res)=>{
 			const {offset = 0, limit = 15} = req.query;
 			
-			const following = await RoomsController.getRooms(Number(offset),Number(limit),req.params.id)
+			const following = await RoomsController.getRooms(Number(offset),Number(limit),req.params._id)
 			res.json(following)
 		})
 		this.app.post('/rooms', async (req,res)=>{

@@ -1,10 +1,11 @@
 import { Post, Comment, Emoji, User } from '../../dbhelper';
 import { posts } from '../../index'
+import mongoose from 'mongoose';
 
 class PostsController {
 
     emojisMapper(post) {
-        const comments = post.comments.length;
+        // const comments = post.comments.length;
         const emojis = [];
         const emojisCount = post.emojis.length;
         post.emojis.forEach(emoji => {
@@ -19,98 +20,61 @@ class PostsController {
         return {
             ...post,
             emojis,
-            comments,
+            comments: post.commentsCount,
             emojisCount
-
         }
     }
 
     async getPosts(offset, limit = 15) {
-        const posts = await Post.findAll({
-            offset, limit, order: [['id', 'DESC']], include: [{
-                model: Emoji,
-                as: 'emojis'
-            },
-            {
-                model: Comment,
-                as: 'comments'
-
-            },
-            {
-                model: User,
-                as: 'user',
-            }
-            ]
-        })
-        return posts.map(post => post.toJSON()).map(this.emojisMapper);
+        const posts = await Post.find({}).sort({_id: -1}).skip(offset).limit(limit).exec();
+        return posts.map(post=>post.toJSON());
     }
 
 
      async getPostsById(id) {
-        const posts = await Post.findOne({
-            where: { id: id }, include: [{
-                model: Emoji,
-                as: 'emojis'
-            },
-            {
-                model: Comment,
-                as: 'comments'
-            },
-            {
-                model: User,
-                as: 'user',
-            }
-            ]
-        })
-        return this.emojisMapper(posts.toJSON());
+        const posts = await Post.findById(mongoose.Types.ObjectId(id)).exec();
+        return posts;
     }
-    async createPost(object, user_id) {
-        console.log(object)
-        const post = await Post.create({ ...object, user_id })
-        const post2 = await this.getPostsById(post.id)
-        console.log(post2)
-        posts.emit("new_post", post2);
+
+    async createPost(object, user) {
+        const post = await Post.create({ ...object, user_id: user._id, user })
+        // const post2 = await this.getPostsById(post._id)
+        posts.emit("new_post", post);
         return post;
     }
 
-    async reportPost(report,postId) {
-        const post = await Post.update({isReported:report}, { where: { id: postId} })
+    async reportPost(report, postId) {
+        console.log(report,postId)
+        const post = await Post.updateOne({ _id: mongoose.Types.ObjectId(postId)}, {isReported:report}).exec();
+        console.log(post)
         return post;
     }
 
     async getReportPosts() {
-        console.log("ss")
-        const posts = await Post.findAll({
-           order: [['id', 'DESC']], where:{isReported:true} 
-        })
-        return posts;
+        const posts = await Post.find({isReported:true}).sort({_id: -1}).exec();
+        return posts.map(post=>post.toJSON());
     }
 
     async deletePost(post_id) {
-        const post = await Post.destroy({ where: { id: post_id } })
+        const post = await Post.deleteOne({ _id: mongoose.Types.ObjectId(post_id)}).exec()
         return post;
     }
     async updatePost(obj, post_id) {
-        const post = await Post.update(obj, { where: { id: post_id } })
+        const post = await Post.update({ _id: mongoose.Types.ObjectId(post_id) }, obj).exec()
         return post;
     }
 
     async getPostComments(offset, limit = 15, post_id) {
-        const comments = await Comment.findAll({
-            offset, limit, where: { post_id: post_id }, include: [{
-                model: User,
-                as: 'user'
-            }],
-        })
-        return comments.map(post => post.toJSON());
+        const comments = await Comment.find({ post_id}).sort({_id: -1}).skip(offset).limit(limit)
+        return comments;
     }
     
-    async createComment(post_id, user_id, text, parent_id) {
-        const post = await Comment.create({ post_id: post_id, user_id: user_id, text: text, parent_id: parent_id })
+    async createComment(post_id, user, text, parent_id) {
+        const post = await Comment.create({ post_id: post_id, user_id: user._id, user, text: text, parent_id: parent_id })
         return post;
     }
     async deleteComment(post_id, id) {
-        const post = await Comment.destroy({ where: { id: id } })
+        const post = await Comment.deleteOne({ _id: mongoose.Types.ObjectId(id)})
         return post;
     }
 }

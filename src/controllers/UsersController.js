@@ -26,23 +26,23 @@ class UserController {
         }
     }
     async getUsers(offset, limit = 15) {
-        const users = await User.findAll({ offset, limit })
+        const users = await User.find().skip(offset).limit(limit).exec();
         return users.map(post => post.toJSON());
 
     }
     async getUsersByUserId(user_id) {
-        const users = await User.findAll({ where: { id: user_id } })
+        const users = await User.find({ _id:mongoose.Types.ObjectId( user_id) } ).exec()
         return users.map(post => post.toJSON());
 
     }
     async getUserByEmail(email) {
-        const users = await User.findOne({ where: { email: email } })
+        const users = await User.findOne({ email: email }).exec()
         let token = jwt.sign({ user: users }, 'secret')
         return token
 
     }
     async search(offset,limit=15,body) {
-        const users = await User.findAll({ where: { name: {[Sequelize.Op.like]: '%'+body.name+'%'} } ,offset,limit})
+        const users = await User.find( { name: {[Sequelize.Op.like]: '%'+body.name+'%'}}).skip(offset).limit(limit).exec()
         
         return users
 
@@ -62,7 +62,7 @@ class UserController {
     }
     async checkUser(obj) {
         console.log("sssdg")
-        const user = await User.findOne({ where: { email: obj.email } })
+        const user = await User.findOne({ email: obj.email } ).exec()
         if (user === null) {
             return [null, null]
         }

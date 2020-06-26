@@ -5,18 +5,18 @@ class MessageController {
 
     async getMessages(offset, limit = 15,id){
         console.log("looooooooool")
-        const messages = await Message.findAll({where:{room_id:id}, offset, limit, order: [['id', 'DESC']]})
+        const messages = await Message.find({room_id:id}).sort({_id:-1}).skip(offset).limit(limit).exec()
         return messages;
     }
     async getCommentById(comment_id){
-        const messages = await Message.findAll({ where:{id:comment_id}})
+        const messages = await Message.find( {_id:mongoose.Types.ObjectId(comment_id)}).exec()
         return messages;
     }
     async createMessage(object,user_id){
         // console.log(object)
         const message = await Message.create({ ...object,from_user:user_id })
-               await Room.update({text:object.text},{where:{id:object.room_id}})
-        // const comment2 = await Comment.findOne({where:{id:comment.id}, include: [{
+               await Room.update({id:object.room_id},{text:object.text}).exec()
+        // const comment2 = await Comment.findOne({where:{id:comment._id}, include: [{
         //     model: User,
         //     as: 'user'
         //   }], })
@@ -35,7 +35,7 @@ class MessageController {
     //     return message;
     // }
     async deleteMessage(comment_id){
-        const message = await Message.destroy({ where:{id:comment_id} })
+        const message = await Message.deleteOne({id:mongoose.Types.ObjectId(comment_id)})
         
         return message;
     }

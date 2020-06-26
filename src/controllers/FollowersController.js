@@ -21,9 +21,9 @@ class FollowersController {
         return followers;
     }
     async getMyUserFollowings(from_user) {
-        const followers = await Follower.findAll({
-            where: { from_user }
-        })
+        const followers = await Follower.find(
+          { from_user }
+        ).exec()
         return followers;
     }
 
