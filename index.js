@@ -1,4 +1,4 @@
-
+require('dotenv').config({path: __dirname + '/.env'})
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import "regenerator-runtime/runtime";
@@ -8,7 +8,6 @@ import express from 'express';
 import socket from 'socket.io';
 import http from 'http';
 mongoose.connect('mongodb+srv://mongoadmin:4G3mHY8McXGq4C9t@cluster0-h449g.mongodb.net/socialdb?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
-
 export let jwt = require('jsonwebtoken')
 const app = express()
 const server = http.createServer(app)
@@ -34,7 +33,16 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  // let token = req.header('token')
+  let token = req.header('token')
+  if(req.path.includes('login')){
+    return next();
+  }
+  let object = jwt.verify(token, 'secret');
+  if(object){    
+      req.user = object.user;
+      req.userId = object.user._id;
+  return    next();
+  }
   // if (token === 'null') {
   //   console.log("hna")
   // }

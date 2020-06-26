@@ -60,6 +60,15 @@ class UserController {
         console.log(token)
         return [user, token];
     }
+
+    async adminLogin(username,password) {
+    if(username === process.env.ADMIN_USERNAME&&password === process.env.ADMIN_PASSWORD){
+        let token = jwt.sign({ user: {admin:true} }, 'secret')
+        return token;
+    }
+    return null;
+    }
+
     async checkUser(obj) {
         console.log("sssdg")
         const user = await User.findOne({ email: obj.email } ).exec()

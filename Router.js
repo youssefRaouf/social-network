@@ -225,6 +225,11 @@ export default class Router {
 			const message = await PostsController.reportPost(req.body.report,req.body.postId)
 			res.json(message)
 		})
+
+		this.app.post('/admin/login', async (req,res)=>{
+			const token = await UsersController.adminLogin(req.body.username,req.body.password)
+			res.json({token})
+		})
 		
             
 	}
