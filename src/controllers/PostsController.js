@@ -65,7 +65,7 @@ class PostsController {
     }
 
     async getPostComments(offset, limit = 15, post_id) {
-        const comments = await Comment.find({ post_id}).sort({_id: -1}).skip(offset).limit(limit)
+        const comments = await Comment.find({ post_id}).sort({_id: -1}).skip(offset).limit(limit).exec()
         return comments;
     }
     
@@ -74,7 +74,7 @@ class PostsController {
         return post;
     }
     async deleteComment(post_id, id) {
-        const post = await Comment.deleteOne({ _id: mongoose.Types.ObjectId(id)})
+        const post = await Comment.deleteOne({ _id: mongoose.Types.ObjectId(id)}).exec()
         return post;
     }
 }

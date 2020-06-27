@@ -1,42 +1,36 @@
 import { Room, User ,Sequelize} from '../../dbhelper';
 import { chatSocket } from '../..';
+import UsersController from './UsersController';
+
 class RoomsController {
 
     async getRooms(offset, limit, id) {
 
-        const rooms = await Room.findAll({
-           where: {
-            [Sequelize.Op.or]: [
-                {
-                  user1_id: Number(id)
-                },
-                {
-                  user2_id: Number(id)
-                }
-              ]
-            },
-           offset,
-           limit,
-           order: [['update_at', 'DESC']],
-            include: [{
-                model: User,
-                as: 'user1',
-            },
-        {
-            model: User,
-            as : 'user2',
-        }],
-        })
+        const rooms = await Room.find(
+            {$or:[{user1_id:id},{user2_id:id}]}
+            // [Sequelize.Op.or]: [
+            //     {
+            //       user1_id: Number(id)
+            //     },
+            //     {
+            //       user2_id: Number(id)
+            //     }
+            //   ]
+            // }
+        ).sort({update_at:-1}).skip(offset).limit(limit).exec()
         return rooms;
     }
 
     async createRoom(user1_id,user2_id){
         console.log("ll")
-        let room = await Room.findAll({where:{user1_id,user2_id}})
+        let room = await Room.find({user1_id,user2_id}).exec()
         if(room.length===0){
-            room = await Room.findAll({where:{ user1_id:user2_id,user2_id:user1_id }})
+            room = await Room.find({ user1_id:user2_id,user2_id:user1_id }).exec()
             if(room.length===0){
-            room = await Room.create({ user1_id,user2_id})
+         const user1 = await UsersController.getUsersByUserId(user1_id)
+         const user2 = await UsersController.getUsersByUserId(user2_id)
+
+            room = await Room.create({ user1_id,user2_id,user1,user2});
              return room ;
             }
             console.log("ll2",room)

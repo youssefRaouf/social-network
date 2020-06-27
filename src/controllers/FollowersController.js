@@ -1,47 +1,35 @@
 import { Post, Comment, Follower,User } from '../../dbhelper';
+import UsersController from './UsersController';
 
 class FollowersController {
 
-    async getFollowTo(offset, limit = 15, from_user) {
-        if(from_user==null){
-            const followers = await Follower.findAll({
-                where: { from_user:req.userId },include: [{
-                    model: User,
-                    as: 'to'
-                }],
-            })
+    async getFollowTo(offset, limit = 15, from_user_id) {
+        if(from_user_id==null){
+            const followers = await Follower.find( { from_user:req.userId }).skip(offset).limit(limit).exec()
             return followers;
         }
-        const followers = await Follower.findAll({
-            where: { from_user }, offset, limit, include: [{
-                model: User,
-                as: 'to'
-            }],
-        })
+        const followers = await Follower.find( { from_user_id}).skip(offset).limit(limit).exec();
         return followers;
     }
-    async getMyUserFollowings(from_user) {
+    async getMyUserFollowings(from_user_id) {
         const followers = await Follower.find(
-          { from_user }
+          { from_user_id }
         ).exec()
         return followers;
     }
 
-    async getFollowFrom(offset, limit = 15, to_user) {
-        const followers = await Follower.findAll({
-            where: { to_user }, offset, limit, include: [{
-                model: User,
-                as: 'from'
-            }],
-        })
+    async getFollowFrom(offset, limit = 15, to_user_id) {
+        const followers = await Follower.find({to_user_id }).skip(offset).limit(limit).exec()
+        
         return followers;
     }
-    async follow(from_user, to_user) {
-        const followers = await Follower.create({ from_user: from_user, to_user: to_user })
+    async follow(from_user_id, to_user_id,from_user) {
+         const to_user = await UsersController.getUsersByUserId(to_user_id)
+        const followers = await Follower.create({ from_user_id,to_user_id,from: from_user, to: to_user })
         return followers;
     }
-    async deleteFollow(from_user, to_user) {
-        const followers = await Follower.destroy({ where: { from_user, to_user } })
+    async deleteFollow(from_user_id, to_user_id) {
+        const followers = await Follower.deleteOne( { from_user_id, to_user_id } ).exec()
         return followers;
     }
 }

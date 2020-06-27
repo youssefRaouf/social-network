@@ -1,4 +1,4 @@
-import { Post, User, Emoji, Comment,Sequelize } from '../../dbhelper';
+import { Post, User, Emoji, Comment, Sequelize } from '../../dbhelper';
 import { UUID } from 'sequelize';
 
 import { jwt } from '../../index'
@@ -31,7 +31,7 @@ class UserController {
 
     }
     async getUsersByUserId(user_id) {
-        const users = await User.find({ _id:mongoose.Types.ObjectId( user_id) } ).exec()
+        const users = await User.find({ _id: mongoose.Types.ObjectId(user_id) }).exec()
         return users.map(post => post.toJSON());
 
     }
@@ -41,9 +41,9 @@ class UserController {
         return token
 
     }
-    async search(offset,limit=15,body) {
-        const users = await User.find( { name: {[Sequelize.Op.like]: '%'+body.name+'%'}}).skip(offset).limit(limit).exec()
-        
+    async search(offset, limit = 15, body) {
+        const users = await User.find({ name: / body.name /  }).skip(offset).limit(limit).exec()
+
         return users
 
     }
@@ -61,17 +61,17 @@ class UserController {
         return [user, token];
     }
 
-    async adminLogin(username,password) {
-    if(username === process.env.ADMIN_USERNAME&&password === process.env.ADMIN_PASSWORD){
-        let token = jwt.sign({ user: {admin:true} }, 'secret')
-        return token;
-    }
-    return null;
+    async adminLogin(username, password) {
+        if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
+            let token = jwt.sign({ user: { admin: true } }, 'secret')
+            return token;
+        }
+        return null;
     }
 
     async checkUser(obj) {
         console.log("sssdg")
-        const user = await User.findOne({ email: obj.email } ).exec()
+        const user = await User.findOne({ email: obj.email }).exec()
         if (user === null) {
             return [null, null]
         }
@@ -79,35 +79,19 @@ class UserController {
         return [user, token];
     }
     async updateUser(obj, user_id) {
-        const user = await User.update(obj, { where: { id: user_id } })
+        const user = await User.update({ _id: mongoose.Types.ObjectId(user_id) }, obj,).exec()
         return user;
     }
     async deleteUser(user_id) {
-        const user = await User.destroy({ where: { id: user_id } })
+        const user = await User.deleteOne({ _id: mongoose.Types.ObjectId(user_id) }).exec()
 
         return user;
     }
 
     async getPostsByUserId(offset, limit = 15, user_id) {
-       console.log("d5l gwa 3mo el userposts")
-        const posts = await Post.findAll({
-            where: { user_id: user_id },
-            offset, limit, order: [['id', 'DESC']], include: [{
-                model: Emoji,
-                as: 'emojis'
-            },
-            {
-                model: Comment,
-                as: 'comments'
-
-            },
-            {
-                model: User,
-                as: 'user',
-            }
-            ]
-        })
-        return posts.map(post => post.toJSON()).map(this.emojisMapper);
+        console.log("d5l gwa 3mo el userposts")
+        const posts = await Post.find({ user_id: user_id }).sort({_id:-1}).skip(offset).limit(limit).exec()
+        return posts.map(post=>post.toJSON());
     }
 
 }

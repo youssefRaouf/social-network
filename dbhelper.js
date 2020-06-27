@@ -45,6 +45,8 @@ export const Room = mongoose.model(
 		update_at:  { type: Date, default: new Date() },
 		user1_id: String,
 		user2_id: String,
+		user1:userSchema,
+		user2:userSchema,
 		text: String
 	}
 );
@@ -64,8 +66,10 @@ export const Comment = mongoose.model(
 export const Follower = mongoose.model(
 	'followers',
 	{
-		from_user: String,
-		to_user: String,
+		from_user_id: String,
+		to_user_id: String,
+		from:userSchema,
+		to:userSchema
 	}
 );
 

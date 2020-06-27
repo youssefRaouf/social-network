@@ -35,7 +35,7 @@ class MessageController {
     //     return message;
     // }
     async deleteMessage(comment_id){
-        const message = await Message.deleteOne({id:mongoose.Types.ObjectId(comment_id)})
+        const message = await Message.deleteOne({id:mongoose.Types.ObjectId(comment_id)}).exec()
         
         return message;
     }

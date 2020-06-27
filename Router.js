@@ -147,7 +147,7 @@ export default class Router {
 			res.json(following)
 		})
 		this.app.post('/users/followToUsers', async (req,res)=>{
-			const following = await FollowersController.follow(req.userId,req.body.to_user)
+			const following = await FollowersController.follow(req.userId,req.body.to_user,req.user)
 			res.json(following)
 		})
 		this.app.delete('/users/:userId/followToUsers', async (req,res)=>{
