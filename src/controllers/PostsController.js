@@ -37,7 +37,12 @@ class PostsController {
     }
 
     async createPost(object, user) {
-        const post = await Post.create({ ...object, user_id: user._id, user })
+        const otherUpdates = {}
+        // add video url
+        if(object.video_name){
+            otherUpdates.url = `${process.env.VIDEO_STREAMING_URL}${object.video_name}`
+        }
+        const post = await Post.create({ ...object, user_id: user._id, user, ...otherUpdates })
         // const post2 = await this.getPostsById(post._id)
         posts.emit("new_post", post);
         return post;
