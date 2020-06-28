@@ -26,7 +26,7 @@ class UserController {
         }
     }
     async getUsers(offset, limit = 15) {
-        const users = await User.find().skip(offset).limit(limit).exec();
+        const users = await User.find({}).skip(offset).limit(limit).exec();
         return users.map(post => post.toJSON());
 
     }
@@ -43,9 +43,7 @@ class UserController {
     }
     async search(offset, limit = 15, body) {
         const users = await User.find({ name: / body.name /  }).skip(offset).limit(limit).exec()
-
         return users
-
     }
     // async getMyProfile(id){
     //     console.log(id)
