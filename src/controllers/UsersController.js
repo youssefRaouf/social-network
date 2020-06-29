@@ -83,7 +83,10 @@ class UserController {
     }
     async deleteUser(user_id) {
         const user = await User.deleteOne({ _id: mongoose.Types.ObjectId(user_id) }).exec()
+        const post = await Post.deleteMany({ user_id:user_id}).exec()
+        const comment = await Comment.deleteMany({user_id:user_id}).exec()
 
+         
         return user;
     }
 
