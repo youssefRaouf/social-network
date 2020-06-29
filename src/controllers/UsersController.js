@@ -42,7 +42,8 @@ class UserController {
 
     }
     async search(offset, limit = 15, body) {
-        const users = await User.find({ name: / body.name /  }).skip(offset).limit(limit).exec()
+        console.log(body.name)
+        const users = await User.find({name: {$regex: '.*' + body.name + '.*', $options: 'i' }}).skip(offset).limit(limit).exec()
         return users
     }
     // async getMyProfile(id){
