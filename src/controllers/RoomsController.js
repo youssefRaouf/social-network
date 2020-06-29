@@ -1,6 +1,7 @@
 import { Room, User ,Sequelize} from '../../dbhelper';
 import { chatSocket } from '../..';
 import UsersController from './UsersController';
+import mongoose from 'mongoose';
 
 class RoomsController {
 

@@ -1,5 +1,6 @@
 import {Message, Room} from '../../dbhelper';
 import { chatSocket ,roomSocket} from '../..';
+import mongoose from 'mongoose';
 
 class MessageController {
 

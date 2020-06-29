@@ -1,5 +1,6 @@
 import { Post, User, Emoji, Comment, Sequelize } from '../../dbhelper';
 import { UUID } from 'sequelize';
+import mongoose from 'mongoose';
 
 import { jwt } from '../../index'
 class UserController {

@@ -1,5 +1,6 @@
 import {Post,Comment,User} from '../../dbhelper';
 import { commentsSocket, reactionsSocket } from '../..';
+import mongoose from 'mongoose';
 
 class CommentController {
 

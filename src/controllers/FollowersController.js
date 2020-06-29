@@ -1,5 +1,6 @@
 import { Post, Comment, Follower,User } from '../../dbhelper';
 import UsersController from './UsersController';
+import mongoose from 'mongoose';
 
 class FollowersController {
 

@@ -1,6 +1,8 @@
 import {Post,Comment,Follower,Emoji} from '../../dbhelper';
 import { commentsSocket, reactionsSocket } from '../..';
 import PostsController from './PostsController'
+import mongoose from 'mongoose';
+
 class EmojisController {
 
     // async getFollowTo(offset, limit = 15,from_user){
