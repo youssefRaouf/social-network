@@ -57,7 +57,7 @@ class UserController {
     async createUser(obj) {
         const user = await User.create({ ...obj })
         let token = jwt.sign({ user: user }, 'secret')
-        console.log(token)
+        // console.log(token)
         return [user, token];
     }
 
@@ -92,7 +92,7 @@ class UserController {
     }
 
     async getPostsByUserId(offset, limit = 15, user_id) {
-        console.log("d5l gwa 3mo el userposts")
+        // console.log("d5l gwa 3mo el userposts")
         const posts = await Post.find({ user_id: user_id }).sort({_id:-1}).skip(offset).limit(limit).exec()
         return posts.map(post=>post.toJSON());
     }

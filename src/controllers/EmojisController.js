@@ -11,13 +11,12 @@ class EmojisController {
     // }
     async createEmoji(object,user_id){
         const emojis = await Emoji.create({...object, user_id})
-        // const emojisCount = await Emoji.count({
-        //     where: {
-        //         post_id: emojis.post_id
-        //     }
-        // });  
-        const post = await PostsController.getPostsById(emojis.post_id)
-        // console.log(post)
+        let type=''
+        let ar=['like', 'love', 'laugh', 'wow', 'sad', 'angry']
+        type=ar[emojis.type-1]
+        console.log(type);
+        const post = await Post.findOneAndUpdate({_id:mongoose.Types.ObjectId(emojis.post_id)},{$inc : { [type]:1 }}).exec()
+        console.log(post,emojis)
         reactionsSocket.emit(`emojis_count_${emojis.post_id}`,post);
 
         return emojis;

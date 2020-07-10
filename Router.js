@@ -6,6 +6,8 @@ import {Emoji} from './dbhelper';
 import EmojisController from './src/controllers/EmojisController';
 import MessagesController from './src/controllers/MessagesController';
 import RoomsController from './src/controllers/RoomsController';
+import mongoose from 'mongoose';
+
 export default class Router {
 	constructor(app) {
 		this.app = app;
@@ -20,8 +22,9 @@ export default class Router {
 				user_id: userId
 			}
 			).exec();
+			// console.log(emojees,userId)
 		return posts.map(post => {
-			const myEmojis = emojees.filter(emojee => emojee.post_id === post._id);
+			const myEmojis = emojees.filter(emojee => mongoose.Types.ObjectId(emojee.post_id).equals(mongoose.Types.ObjectId(post._id)));
 			return {
 				...post,
 				myEmojis
@@ -35,6 +38,7 @@ export default class Router {
 			const {offset = 0, limit = 15} = req.query;
 			let posts = await PostsController.getPosts(Number(offset), Number(limit))
 			posts = await this.addCurrentUserEmojsToPosts(posts, req.userId)
+			// console.log(posts)
 			console.log(posts)
 			res.json(posts)
 		})
@@ -67,12 +71,12 @@ export default class Router {
 			res.json(posts)
 		})
 		this.app.get('/users/:email', async (req,res)=>{
-			console.log("leh d5l hna")
+			// console.log("leh d5l hna")
 			const posts = await UsersController.getUserByEmail(req.params.email)
 			res.json(posts)
 		})
 		this.app.get('/users/profile/myProfile', async (req,res)=>{
-			console.log("d5lna gwa el profile")
+			// console.log("d5lna gwa el profile")
 			const user = await UsersController.getMyProfile(req.userId)
 			res.json(user)
 		})

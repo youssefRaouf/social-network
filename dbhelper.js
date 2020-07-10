@@ -20,14 +20,12 @@ export const Post = mongoose.model('Post', {
 	video_name: String,
 	isReported:{type: Boolean,default:false},
 	commentsCount: {type: Number, default: 0},
-	emojisCount: { type: {}, default: {
-		like: 0,
-		angry: 0,
-		love: 0,
-		wow: 0,
-		laugh: 0,
-		sad: 0
-	}},
+	like: {type: Number, default: 0},
+	angry: {type: Number, default: 0},
+	love: {type: Number, default: 0},
+	wow: {type: Number, default: 0},
+	laugh: {type: Number, default: 0},
+	sad: {type: Number, default: 0},
 });
 
 export const Message = mongoose.model(
@@ -73,26 +71,17 @@ export const Follower = mongoose.model(
 	}
 );
 
-export const Emoji = mongoose.model(
-	'emojis',
-	{
-		type: Number,
+const emojiSchema = new mongoose.Schema({
+	type: Number,
 		post_id: String,
 		user_id: String
-		// type: {
-		// 	type: Sequelize.INTEGER,
-		// 	primaryKey: true,
-		// },
-		// post_id: {
-		// 	type: Sequelize.INTEGER,
-		// 	primaryKey: true,
-		// },
-		// user_id: {
-		// 	type: Sequelize.INTEGER,
-		// 	primaryKey: true,
-		// }
-	}
+})
+emojiSchema.index({post_id: 1, user_id: 1}, {unique: true})
+export const Emoji = mongoose.model(
+	'emojis',
+	emojiSchema
 );
+
 
 // Post.hasMany(Emoji, { foreignKey: 'post_id', sourceKey: 'id' });
 // Post.hasMany(Comment, { foreignKey: 'post_id', sourceKey: 'id' });

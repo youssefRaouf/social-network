@@ -37,12 +37,16 @@ app.use((req, res, next) => {
   if(req.path.includes('login')){
     return next();
   }
+  // console.log("youssef",token)
+  if(token!=='null'){
+    console.log(req.url,req.method)
   let object = jwt.verify(token, 'secret');
   if(object){    
       req.user = object.user;
       req.userId = object.user._id;
   return    next();
   }
+}
   // if (token === 'null') {
   //   console.log("hna")
   // }
