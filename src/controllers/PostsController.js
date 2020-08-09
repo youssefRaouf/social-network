@@ -71,6 +71,7 @@ class PostsController {
 
     async getPostComments(offset, limit = 15, post_id) {
         const comments = await Comment.find({ post_id}).sort({_id: -1}).skip(offset).limit(limit).exec()
+       console.log("get comments",comments,post_id)
         return comments;
     }
     

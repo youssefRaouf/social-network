@@ -44,7 +44,7 @@ class UserController {
     }
     async search(offset, limit = 15, body) {
         console.log(body.name)
-        const users = await User.find({name: {$regex: '.*' + body.name + '.*', $options: 'i' }}).skip(offset).limit(limit).exec()
+        const users = await User.find({ name: { $regex: '.*' + body.name + '.*', $options: 'i' } }).skip(offset).limit(limit).exec()
         return users
     }
     // async getMyProfile(id){
@@ -84,17 +84,24 @@ class UserController {
     }
     async deleteUser(user_id) {
         const user = await User.deleteOne({ _id: mongoose.Types.ObjectId(user_id) }).exec()
-        const post = await Post.deleteMany({ user_id:user_id}).exec()
-        const comment = await Comment.deleteMany({user_id:user_id}).exec()
+        const post = await Post.deleteMany({ user_id: user_id }).exec()
+        const comment = await Comment.deleteMany({ user_id: user_id }).exec()
 
-         
+
         return user;
     }
 
     async getPostsByUserId(offset, limit = 15, user_id) {
         // console.log("d5l gwa 3mo el userposts")
-        const posts = await Post.find({ user_id: user_id }).sort({_id:-1}).skip(offset).limit(limit).exec()
-        return posts.map(post=>post.toJSON());
+        const posts = await Post.find({ user_id: user_id }).sort({ _id: -1 }).skip(offset).limit(limit).exec()
+        return posts.map(post => post.toJSON());
+    }
+
+    async getPostsCountByUserId(user_id) {
+        // console.log("d5l gwa 3mo el userposts")
+        const postsCount = await Post.count({ user_id: user_id }).exec()
+        console.log("ssssss", postsCount)
+        return postsCount
     }
 
 }

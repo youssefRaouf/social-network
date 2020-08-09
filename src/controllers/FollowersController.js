@@ -26,6 +26,7 @@ class FollowersController {
     }
     async follow(from_user_id, to_user_id,from_user) {
          const to_user = await UsersController.getUsersByUserId(to_user_id)
+         console.log(from_user_id,to_user_id,from_user,to_user)
         const followers = await Follower.create({ from_user_id,to_user_id,from: from_user, to: to_user })
         return followers;
     }

@@ -144,6 +144,11 @@ export default class Router {
 			posts = await this.addCurrentUserEmojsToPosts(posts, req.userId)
 			res.json(posts)
 		})
+		
+		this.app.get('/users/:userId/postsCount', async (req,res)=>{
+			const posts = await UsersController.getPostsCountByUserId(req.params.userId)
+			res.json(posts)
+		})
 
 		this.app.get('/users/:userId/followToUsers', async (req,res)=>{
 			const {offset = 0, limit = 15} = req.query;
@@ -167,7 +172,7 @@ export default class Router {
 
 		this.app.get('/posts/:id/comments', async (req,res)=>{
 			const {offset = 0, limit = 15} = req.query;
-			const following = await PostsController.getPostComments(Number(offset), Number(limit),req.params._id)
+			const following = await PostsController.getPostComments(Number(offset), Number(limit),req.params.id)
 			res.json(following)
 		})
 		this.app.post('/posts/:id/comments', async (req,res)=>{
