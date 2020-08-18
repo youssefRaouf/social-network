@@ -13,7 +13,7 @@ class CommentController {
         return comments;
     }
     async createComment(object,user){
-        // console.log(object)
+        console.log(object)
         const comment = await Comment.create({ ...object, user_id:user._id,user })
         const post = await Post.findOneAndUpdate({_id:mongoose.Types.ObjectId(comment.post_id)},{$inc : { commentsCount:1 }},{new:true})
         commentsSocket.emit("new_comment"+comment.post_id,comment);

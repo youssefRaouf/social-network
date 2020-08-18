@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 class RoomsController {
 
     async getRooms(offset, limit, id) {
-
+      console.log("room id",id)
         const rooms = await Room.find(
             {$or:[{user1_id:id},{user2_id:id}]}
             // [Sequelize.Op.or]: [
@@ -19,6 +19,7 @@ class RoomsController {
             //   ]
             // }
         ).sort({update_at:-1}).skip(offset).limit(limit).exec()
+        console.log("el rooms",id)
         return rooms;
     }
 
@@ -31,7 +32,7 @@ class RoomsController {
          const user1 = await UsersController.getUsersByUserId(user1_id)
          const user2 = await UsersController.getUsersByUserId(user2_id)
 
-            room = await Room.create({ user1_id,user2_id,user1,user2});
+            room = await Room.create({ user1_id,user2_id,user1:user1[0],user2:user2[0]});
              return room ;
             }
             console.log("ll2",room)

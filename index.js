@@ -33,6 +33,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
+  console.log(":D")
   let token = req.header('token')
   if(req.path.includes('login')){
     return next();

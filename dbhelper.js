@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
 
 export const User = mongoose.model(
 	'user',
-	userSchema	
+	userSchema
 );
 
 export const Post = mongoose.model('Post', {
@@ -16,23 +16,23 @@ export const Post = mongoose.model('Post', {
 	user_id: String,
 	user: userSchema,
 	url: String,
-	created_at: { type: Date, default: new Date() },
+	created_at: { type: Date, default: Date.now },
 	video_name: String,
-	isReported:{type: Boolean,default:false},
-	commentsCount: {type: Number, default: 0},
-	like: {type: Number, default: 0},
-	angry: {type: Number, default: 0},
-	love: {type: Number, default: 0},
-	wow: {type: Number, default: 0},
-	laugh: {type: Number, default: 0},
-	sad: {type: Number, default: 0},
+	isReported: { type: Boolean, default: false },
+	commentsCount: { type: Number, default: 0 },
+	like: { type: Number, default: 0 },
+	angry: { type: Number, default: 0 },
+	love: { type: Number, default: 0 },
+	wow: { type: Number, default: 0 },
+	laugh: { type: Number, default: 0 },
+	sad: { type: Number, default: 0 },
 });
 
 export const Message = mongoose.model(
 	'messages',
 	{
 		text: String,
-		from_user: Number,
+		from_user: String,
 		room_id: String
 		// company_id: { type: Sequelize.INTEGER, defaultValue: 1 },
 	}
@@ -40,25 +40,25 @@ export const Message = mongoose.model(
 export const Room = mongoose.model(
 	'room',
 	{
-		update_at:  { type: Date, default: new Date() },
+		update_at: { type: Date, default: Date.now },
 		user1_id: String,
 		user2_id: String,
-		user1:userSchema,
-		user2:userSchema,
+		user1: userSchema,
+		user2: userSchema,
 		text: String
 	}
 );
 export const Comment = mongoose.model(
 	'comments',
 	{
-	
+
 		text: String,
 		parent_id: String,
 		post_id: String,
 		user_id: String,
 		user: userSchema,
-		created_at:  { type: Date, default: new Date() },
-	}
+		created_at: { type: Date, default: Date.now }
+	},
 );
 
 export const Follower = mongoose.model(
@@ -66,17 +66,17 @@ export const Follower = mongoose.model(
 	{
 		from_user_id: String,
 		to_user_id: String,
-		from:userSchema,
-		to:userSchema
+		from: userSchema,
+		to: userSchema
 	}
 );
 
 const emojiSchema = new mongoose.Schema({
 	type: Number,
-		post_id: String,
-		user_id: String
+	post_id: String,
+	user_id: String
 })
-emojiSchema.index({post_id: 1, user_id: 1}, {unique: true})
+emojiSchema.index({ post_id: 1, user_id: 1 }, { unique: true })
 export const Emoji = mongoose.model(
 	'emojis',
 	emojiSchema

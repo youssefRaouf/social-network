@@ -10,6 +10,7 @@ class FollowersController {
             return followers;
         }
         const followers = await Follower.find( { from_user_id}).skip(offset).limit(limit).exec();
+        console.log("get el nas el 3mlaly follow",followers)
         return followers;
     }
     async getMyUserFollowings(from_user_id) {
@@ -21,13 +22,14 @@ class FollowersController {
 
     async getFollowFrom(offset, limit = 15, to_user_id) {
         const followers = await Follower.find({to_user_id }).skip(offset).limit(limit).exec()
-        
+        console.log("get follower",followers)
         return followers;
     }
     async follow(from_user_id, to_user_id,from_user) {
          const to_user = await UsersController.getUsersByUserId(to_user_id)
-         console.log(from_user_id,to_user_id,from_user,to_user)
-        const followers = await Follower.create({ from_user_id,to_user_id,from: from_user, to: to_user })
+         console.log("el to_user",from_user_id,to_user_id,from_user,to_user)
+        const followers = await Follower.create({ from_user_id,to_user_id,from: from_user, to: to_user[0] })
+        console.log("creatna",followers)
         return followers;
     }
     async deleteFollow(from_user_id, to_user_id) {

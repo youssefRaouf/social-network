@@ -198,7 +198,7 @@ export default class Router {
 		})
 		this.app.get('/messages/:id', async (req,res)=>{
 			const {offset = 0, limit = 15} = req.query;
-			const following = await MessagesController.getMessages(Number(offset),Number(limit),req.params._id)
+			const following = await MessagesController.getMessages(Number(offset),Number(limit),req.params.id)
 			res.json(following)
 		})
 
@@ -213,7 +213,7 @@ export default class Router {
 		this.app.get('/rooms/:id', async (req,res)=>{
 			const {offset = 0, limit = 15} = req.query;
 			
-			const following = await RoomsController.getRooms(Number(offset),Number(limit),req.params._id)
+			const following = await RoomsController.getRooms(Number(offset),Number(limit),req.params.id)
 			res.json(following)
 		})
 		this.app.post('/rooms', async (req,res)=>{
