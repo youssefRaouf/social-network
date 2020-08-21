@@ -49,9 +49,7 @@ class PostsController {
     }
 
     async reportPost(report, postId) {
-        console.log(report,postId)
         const post = await Post.updateOne({ _id: mongoose.Types.ObjectId(postId)}, {isReported:report}).exec();
-        console.log(post)
         return post;
     }
 
