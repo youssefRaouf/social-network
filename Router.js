@@ -36,7 +36,7 @@ export default class Router {
 		this.app.get('/test', (req, res) => res.json({ "status": "success" }));
 		this.app.get('/posts', async (req, res) => {
 			const { offset = 0, limit = 15 } = req.query;
-			let posts = await PostsController.getPosts(Number(offset), Number(limit))
+			let posts = await PostsController.getPosts(Number(offset), Number(limit),req.userId)
 			posts = await this.addCurrentUserEmojsToPosts(posts, req.userId)
 			res.json(posts)
 		})
@@ -146,6 +146,16 @@ export default class Router {
 			res.json(posts)
 		})
 
+		this.app.get('/users/:userId/followersCount', async (req, res) => {
+			const followers = await FollowersController.getFollowersCountByUserId(req.params.userId)
+			res.json(followers)
+		})
+
+		this.app.get('/users/:userId/followingsCount', async (req, res) => {
+			const followings = await FollowersController.getFollowingsCountByUserId(req.params.userId)
+			res.json(followings)
+		})
+
 		this.app.get('/users/:userId/followToUsers', async (req, res) => {
 			const { offset = 0, limit = 15 } = req.query;
 			const following = await FollowersController.getFollowTo(Number(offset), Number(limit), req.params.userId)
@@ -153,6 +163,10 @@ export default class Router {
 		})
 		this.app.post('/users/followToUsers', async (req, res) => {
 			const following = await FollowersController.follow(req.userId, req.body.to_user, req.user)
+			res.json(following)
+		})
+		this.app.post('/users/checkIfFollow', async (req, res) => {
+			const following = await FollowersController.checkIfFollow(req.userId,req.body.id)
 			res.json(following)
 		})
 		this.app.delete('/users/:userId/followToUsers', async (req, res) => {

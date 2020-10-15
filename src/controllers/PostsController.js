@@ -1,32 +1,39 @@
 import { Post, Comment, Emoji, User } from '../../dbhelper';
 import { posts } from '../../index'
 import mongoose from 'mongoose';
+import FollowersController from './FollowersController';
 
 class PostsController {
 
-    emojisMapper(post) {
-        // const comments = post.comments.length;
-        const emojis = [];
-        const emojisCount = post.emojis.length;
-        post.emojis.forEach(emoji => {
-            if (!emojis[emoji.type]) {
-                emojis[emoji.type] = 1;
-            } else {
-                emojis[emoji.type] = emojis[emoji.type] + 1;
-            }
+    // emojisMapper(post) {
+    //     // const comments = post.comments.length;
+    //     const emojis = [];
+    //     const emojisCount = post.emojis.length;
+    //     post.emojis.forEach(emoji => {
+    //         if (!emojis[emoji.type]) {
+    //             emojis[emoji.type] = 1;
+    //         } else {
+    //             emojis[emoji.type] = emojis[emoji.type] + 1;
+    //         }
 
-        })
-        // comments=post.comments.length();
-        return {
-            ...post,
-            emojis,
-            comments: post.commentsCount,
-            emojisCount
-        }
-    }
+    //     })
+    //     // comments=post.comments.length();
+    //     return {
+    //         ...post,
+    //         emojis,
+    //         comments: post.commentsCount,
+    //         emojisCount
+    //     }
+    // }
 
-    async getPosts(offset, limit = 15) {
-        const posts = await Post.find({}).sort({_id: -1}).skip(offset).limit(limit).exec();
+    async getPosts(offset, limit = 15,userId) {
+         const followings= await FollowersController.getMyUserFollowings(userId);
+         const followingsIds= followings.map(following=>following.to._id.toString());
+         const posts = await Post.find(
+			{
+				user_id: { $in: followingsIds },
+			}
+		).sort({_id: -1}).skip(offset).limit(limit).exec();
         return posts.map(post=>post.toJSON());
     }
 

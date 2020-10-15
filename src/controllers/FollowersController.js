@@ -10,7 +10,6 @@ class FollowersController {
             return followers;
         }
         const followers = await Follower.find( { from_user_id}).skip(offset).limit(limit).exec();
-        console.log("get el nas el 3mlaly follow",followers)
         return followers;
     }
     async getMyUserFollowings(from_user_id) {
@@ -35,6 +34,29 @@ class FollowersController {
     async deleteFollow(from_user_id, to_user_id) {
         const followers = await Follower.deleteOne( { from_user_id, to_user_id } ).exec()
         return followers;
+    }
+
+    async getFollowersCountByUserId(user_id) {
+        // console.log("d5l gwa 3mo el userposts")
+        const followersCount = await Follower.count({ to_user_id: user_id }).exec()
+        console.log("ssssss", followersCount)
+        return followersCount
+    }
+
+    async getFollowingsCountByUserId(user_id) {
+        // console.log("d5l gwa 3mo el userposts")
+        const followingsCount = await Follower.count({ from_user_id: user_id }).exec()
+        console.log("ssssss", followingsCount)
+        return followingsCount
+    }
+
+    async checkIfFollow(from_user_id,user_id) {
+        // console.log("d5l gwa 3mo el userposts")
+        const following = await Follower.findOne({ from_user_id:from_user_id,to_user_id: user_id }).exec()
+        if(following){
+            return true;
+        }
+        return false;
     }
 }
 
