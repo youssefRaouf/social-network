@@ -29,6 +29,7 @@ class PostsController {
     async getPosts(offset, limit = 15,userId) {
          const followings= await FollowersController.getMyUserFollowings(userId);
          const followingsIds= followings.map(following=>following.to._id.toString());
+         followingsIds.push(userId);
          const posts = await Post.find(
 			{
 				user_id: { $in: followingsIds },
